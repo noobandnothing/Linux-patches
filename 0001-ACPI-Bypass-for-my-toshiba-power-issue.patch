@@ -1,0 +1,31 @@
+From 3d0b7510e8b127dfd0d0a966484e2fc4387a2399 Mon Sep 17 00:00:00 2001
+From: noobandnothing <>
+Date: Wed, 21 Sep 2022 10:41:38 +0200
+Subject: [PATCH] ACPI : Bypass for my toshiba power issue
+
+---
+ drivers/acpi/acpica/evregion.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/acpica/evregion.c b/drivers/acpi/acpica/evregion.c
+index b96b3a7e7..bdc47cc5d 100644
+--- a/drivers/acpi/acpica/evregion.c
++++ b/drivers/acpi/acpica/evregion.c
+@@ -688,10 +688,12 @@ acpi_ev_execute_reg_methods(struct acpi_namespace_node *node,
+ 	 * call _REG on them. Also, a data_table is not a "real" address space,
+ 	 * so do not call _REG. September 2018.
+ 	 */
+-	if ((space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) ||
+-	    (space_id == ACPI_ADR_SPACE_SYSTEM_IO) ||
++	if ((space_id == ACPI_ADR_SPACE_SYSTEM_IO) ||
+ 	    (space_id == ACPI_ADR_SPACE_DATA_TABLE)) {
+ 		return_VOID;
++	}else if((space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY)){
++		/* bypass for my toshiba latptop  power and  battery issue*/
++		printk(KERN_DEBUG "PRO HEHE : Bypassing for battery is done");
+ 	}
+ 
+ 	info.space_id = space_id;
+-- 
+2.34.1
+
